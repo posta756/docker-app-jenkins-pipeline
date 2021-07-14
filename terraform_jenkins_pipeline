@@ -1,0 +1,56 @@
+node{
+    stage("SCM Checkout"){
+       git credentialsId: 'git_creds', url: 'https://github.com/posta756/my-app.git' 
+       }
+   stage(‘mvn package’) {
+       def mvnHome = tool name: 'maven-3', type: 'maven'
+       def mvnCMD = "${mvnHome}/bin/mvn"
+	sh "${mvnCMD} clean package"
+    }
+
+}
+
+terraform jenkins
+
+pipeline{
+    agent any
+    tools {
+        terraform 'terraform-11'
+    }
+    stages{
+        stage ('Git Checkout'){
+            git credentialsId: 'git_cred', url: 'https://github.com/posta756/iac-demo.git'
+            
+        }
+    }
+        stage('Terraform Init'){
+            steps{
+                sh label: '', script: 'terraform init'
+                
+            }
+        }
+        stage('Terraform Init'){
+
+            steps{
+                sh label: '', script: 'terraform apply auto--approve'
+            }        
+
+        }
+
+
+
+deploying docker app using jenkins pipeline 
+
+node{
+      stage('Scm Checkout'){
+          git credentialsId: 'git_creds', url: 'https://github.com/posta756/my-app'
+      }
+      stage('Mvn Package'){
+          
+         def mvnHome = tool name: 'maven-3', type: 'maven'
+          def mvnCMD = "${mvnHome}/bin/mvn"
+          sh "${mvnCMD} clean package"
+          
+      }
+      
+  }
